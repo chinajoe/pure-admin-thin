@@ -5,7 +5,7 @@ import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
 import { templateRef } from "@vueuse/core";
 import SidebarItem from "./sidebarItem.vue";
-import avatars from "/@/assets/avatars.jpg";
+import avatars from "/@/assets/avatars.png";
 import screenfull from "../screenfull/index.vue";
 import { useRoute, useRouter } from "vue-router";
 import { deviceDetection } from "/@/utils/deviceDetection";

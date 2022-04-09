@@ -70,7 +70,7 @@ onMounted(() => {
             }
           }"
         >
-          Pure Admin
+          轻课-工作台
         </h2>
         <div
           class="input-group user focus"
@@ -131,7 +131,7 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <el-checkbox v-model="remember" label="记住我"></el-checkbox>
+          <el-checkbox v-model="remember" label="记住我" />
         </div>
         <button
           class="btn"

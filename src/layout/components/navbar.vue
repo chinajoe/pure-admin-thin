@@ -3,9 +3,9 @@ import { useI18n } from "vue-i18n";
 import { useNav } from "../hooks/nav";
 import { useRoute } from "vue-router";
 import Search from "./search/index.vue";
-import Notice from "./notice/index.vue";
+// import Notice from "./notice/index.vue";
 import mixNav from "./sidebar/mixNav.vue";
-import avatars from "/@/assets/avatars.jpg";
+import avatars from "/@/assets/avatars.png";
 import Hamburger from "./sidebar/hamBurger.vue";
 import { watch, getCurrentInstance } from "vue";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
@@ -75,7 +75,7 @@ const updateCache = async () => {
       <!-- 菜单搜索 -->
       <Search />
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <!--      <Notice id="header-notice" />-->
       <!-- 全屏 -->
       <screenfull id="header-screenfull" v-show="!deviceDetection()" />
       <!-- 国际化 -->
