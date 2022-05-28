@@ -3,16 +3,15 @@ import { onMounted, reactive } from "vue";
 import PostList from "./list/index.vue";
 import { Page } from "/@/api/model/domain";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
-import { Post, PostQuery } from "/@/api/model/system/post_model";
-import { postApi } from "/@/api/system/post";
+import { Course, CourseQuery } from "/@/api/model/course/course_list_model";
+import { courseApi } from "/@/api/course/course_list";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { dictStoreHook } from "/@/store/modules/dict";
 
 const pageData = reactive<{
   position: string;
   isEnabledOptions: DictEntryCache[];
-  postList: Post[];
-  searchInfo: PostQuery;
+  postList: Course[];
+  searchInfo: CourseQuery;
 }>({
   position: "left",
   isEnabledOptions: [],
@@ -23,13 +22,12 @@ const pageData = reactive<{
     pageSize: 10,
     pageNum: 1,
     total: 0,
-    number: "",
-    name: "",
-    isEnabled: null
+    courseName: "",
+    publishStatus: null
   }
 });
 const getPage = async () => {
-  const result: Page<Post[]> = await postApi.page(pageData.searchInfo);
+  const result: Page<Course[]> = await courseApi.page(pageData.searchInfo);
   pageData.postList = result.records;
   pageData.searchInfo.total = Number(result.total);
 };
@@ -40,7 +38,20 @@ const handlerSearch = () => {
   getPage();
 };
 const getDict = () => {
-  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+  pageData.isEnabledOptions = [
+    {
+      label: "未发布",
+      value: "0"
+    },
+    {
+      label: "发布中",
+      value: "1"
+    },
+    {
+      label: "已发布",
+      value: "2"
+    }
+  ];
 };
 onMounted(() => {
   getPage();
@@ -59,22 +70,15 @@ onMounted(() => {
     >
       <el-form-item>
         <el-input
-          v-model="pageData.searchInfo.number"
-          placeholder="岗位编码"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-input
-          v-model="pageData.searchInfo.name"
-          placeholder="岗位名称"
+          v-model="pageData.searchInfo.courseName"
+          placeholder="课程名称"
           clearable
         />
       </el-form-item>
       <el-form-item>
         <el-select
-          v-model="pageData.searchInfo.isEnabled"
-          placeholder="岗位状态"
+          v-model="pageData.searchInfo.publishStatus"
+          placeholder="发布状态"
           clearable
         >
           <el-option

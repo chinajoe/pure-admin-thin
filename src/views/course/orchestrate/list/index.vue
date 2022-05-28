@@ -3,16 +3,16 @@ export default { name: "PostList" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, Ref, ref } from "vue";
-import { Post, PostQuery } from "/@/api/model/system/post_model";
+import { Course, CourseQuery } from "/@/api/model/course/course_list_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import PostEdit from "../edit/index.vue";
-import { ElTable, ElUpload } from "element-plus";
-import { successMessage, warnMessage } from "/@/utils/message";
+import { ElTable } from "element-plus";
+import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
-import { postApi } from "/@/api/system/post";
+import { courseApi } from "/@/api/course/course_list";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+
 const postListRef = ref<InstanceType<typeof ElTable>>();
-const uploadRef = ref<InstanceType<typeof ElUpload>>();
 const permission = reactive({
   add: ["post:save"],
   edit: ["post:update"],
@@ -23,49 +23,56 @@ const emit = defineEmits<{
 }>();
 const pageData = reactive<{
   dialogTableVisible: boolean;
-  selection: Post[];
-  postInfo: Post;
+  selection: Course[];
+  postInfo: Course;
   isUpdate: boolean;
 }>({
   dialogTableVisible: false,
   selection: [],
+  isUpdate: false,
   postInfo: {
     id: "",
-    name: "",
-    number: "",
-    isEnabled: 0,
+    courseName: "",
+    courseCover: "",
+    publishStatus: 0,
+    courseDescription: "",
     sort: 999,
-    description: ""
-  },
-  isUpdate: false
+    publishTime: ""
+  }
 });
 const props = defineProps({
-  postList: Array as PropType<Post[]>,
-  searchModel: Object as PropType<PostQuery>,
+  postList: Array as PropType<Course[]>,
+  searchModel: Object as PropType<CourseQuery>,
   isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const postList = toRef(props, "postList");
-const searchModel: Ref<PostQuery> = toRef(props, "searchModel");
+const searchModel: Ref<CourseQuery> = toRef(props, "searchModel");
 const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
   props,
   "isEnabledOptions"
 );
-const sizeChange = (pageSize: number) => {};
-const currentChange = (pageNum: number) => {};
+
+const sizeChange = () => {
+  handlerRefresh();
+};
+const currentChange = () => {
+  handlerRefresh();
+};
 const handleSelectionChange = val => {
   pageData.selection = val;
 };
-const initPostInfo = (data: Post) => {
+const initPostInfo = (data: Course) => {
   if (data) {
     pageData.postInfo = data;
   } else {
     pageData.postInfo = {
       id: "",
-      name: "",
-      number: "",
-      isEnabled: 0,
+      courseName: "",
+      courseCover: "",
+      publishStatus: 0,
+      courseDescription: "",
       sort: 999,
-      description: ""
+      publishTime: ""
     };
   }
 };
@@ -78,12 +85,12 @@ const handlerUpdate = () => {
     handlerEdit(pageData.selection[0]);
   }
 };
-const handlerEdit = (data: Post) => {
+const handlerEdit = (data: Course) => {
   initPostInfo(data);
   pageData.isUpdate = true;
   pageData.dialogTableVisible = true;
 };
-const handlerDelete = (data: Post) => {
+const handlerDelete = (data: Course) => {
   confirm("是否删除当前数据")
     .then(() => {
       let ids: string[] = [data.id];
@@ -119,22 +126,26 @@ const postDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  await postApi.deleteBatch(ids);
+  await courseApi.deleteBatch(ids);
   handlerRefresh();
 };
-const handlerExport = () => {
-  confirm("是否导出当前全部数据")
-    .then(async () => {
-      await postApi.exportFile(searchModel.value);
-    })
-    .catch(() => {});
+const publishStatusLabelRender = (publishStatus: number) => {
+  if (publishStatus === 0) {
+    return "未发布";
+  } else if (publishStatus === 1) {
+    return "发布中";
+  } else if (publishStatus === 2) {
+    return "已发布";
+  }
 };
-const handlerUpload = async val => {
-  const fileData: File[] = [val.file];
-  await postApi.uploadFile(fileData);
-  successMessage("导入成功");
-  handlerRefresh();
-  uploadRef.value.clearFiles();
+const publishStatusStyleRender = (publishStatus: number) => {
+  if (publishStatus === 0) {
+    return "danger";
+  } else if (publishStatus === 1) {
+    return "warning";
+  } else if (publishStatus === 2) {
+    return "success";
+  }
 };
 </script>
 <template>
@@ -166,35 +177,6 @@ const handlerUpload = async val => {
             v-auth="permission.delete"
             >删除</el-button
           >
-          <button
-            class="el-button el-button--default"
-            style="padding: 0 0 0 0px"
-          >
-            <el-upload
-              ref="uploadRef"
-              class="upload-demo"
-              :multiple="false"
-              :show-file-list="false"
-              :limit="1"
-              action=""
-              :http-request="handlerUpload"
-            >
-              <el-button
-                type="info"
-                size="default"
-                :icon="useRenderIcon('iconify-fa-upload')"
-                >上传</el-button
-              >
-            </el-upload>
-          </button>
-
-          <el-button
-            size="default"
-            type="warning"
-            :icon="useRenderIcon('iconify-fa-download')"
-            @click="handlerExport"
-            >导出</el-button
-          >
         </div>
         <div class="avue-crud__right">
           <el-button
@@ -223,24 +205,32 @@ const handlerUpload = async val => {
           type="selection"
         />
         <el-table-column
-          prop="number"
-          label="岗位编码"
+          prop="courseName"
+          label="课程名称"
           sortable
           resizable
           :show-overflow-tooltip="true"
           align="center"
         />
         <el-table-column
-          prop="name"
-          label="岗位名称"
+          prop="courseCover"
+          label="课程封面"
           sortable
           resizable
           :show-overflow-tooltip="true"
           align="center"
         />
         <el-table-column
-          prop="isEnabled"
-          label="岗位状态"
+          prop="courseDescription"
+          label="课程描述"
+          sortable
+          resizable
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="publishStatus"
+          label="发布状态"
           sortable
           resizable
           :show-overflow-tooltip="true"
@@ -248,20 +238,12 @@ const handlerUpload = async val => {
         >
           <template #default="scope">
             <el-tag
-              :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
+              :type="publishStatusStyleRender(scope.row.publishStatus)"
               disable-transitions
-              >{{ scope.row.isEnabled === 1 ? "启用" : "禁用" }}</el-tag
+              >{{ publishStatusLabelRender(scope.row.publishStatus) }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column
-          prop="sort"
-          label="排序"
-          sortable
-          resizable
-          :show-overflow-tooltip="true"
-          align="center"
-        />
         <el-table-column
           prop="createTime"
           label="创建时间"
