@@ -3,18 +3,22 @@ export default { name: "PostEdit" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, ref, Ref } from "vue";
-import { Post } from "/@/api/model/system/post_model";
+import { Course } from "/@/api/model/course/course_list_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { postApi } from "/@/api/system/post";
+import { courseApi } from "/@/api/course/course_list";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 const postForm = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
 const postRules = reactive({
-  name: [{ required: true, message: "请输入岗位名称", trigger: "blur" }],
-  number: [{ required: true, message: "请输入岗位编码", trigger: "blur" }]
+  courseName: [{ required: true, message: "请输入课程名称", trigger: "blur" }],
+  courseCover: [{ required: true, message: "请上传课程封面", trigger: "blur" }],
+  courseAudio: [{ required: true, message: "请上传课程音频", trigger: "blur" }],
+  courseDescription: [
+    { required: true, message: "请输入课程简介", trigger: "blur" }
+  ]
 });
 const props = defineProps({
   position: {
@@ -27,7 +31,7 @@ const props = defineProps({
     default: false,
     type: Boolean
   },
-  postInfo: Object as PropType<Post>,
+  postInfo: Object as PropType<Course>,
   dialogVisible: {
     require: true,
     default: false,
@@ -61,12 +65,12 @@ const handlerSave = () => {
   });
 };
 const save = async () => {
-  await postApi.save(postInfo.value);
+  await courseApi.save(postInfo.value);
   successMessage("保存成功");
   handleDialogClose();
 };
 const update = async () => {
-  await postApi.updateById(postInfo.value.id, postInfo.value);
+  await courseApi.updateById(postInfo.value.id, postInfo.value);
   successMessage("保存成功");
   handleDialogClose();
 };
@@ -75,7 +79,7 @@ const update = async () => {
 <template>
   <div>
     <el-dialog
-      title="岗位信息"
+      title="课程信息"
       destroy-on-close
       v-model="dialogVisible"
       :before-close="handleDialogClose"
@@ -89,14 +93,14 @@ const update = async () => {
         :rules="postRules"
         center
       >
-        <el-form-item required label="岗位编码" prop="number">
-          <el-input v-model="postInfo.number" clearable />
+        <el-form-item required label="课程名称" prop="courseName">
+          <el-input v-model="postInfo.courseName" clearable />
         </el-form-item>
-        <el-form-item required label="岗位名称" prop="name">
-          <el-input v-model="postInfo.name" clearable />
+        <el-form-item required label="课程封面" prop="courseCover">
+          <el-input v-model="postInfo.courseCover" clearable />
         </el-form-item>
-        <el-form-item required label="岗位状态" prop="isEnabled">
-          <el-radio-group v-model="postInfo.isEnabled">
+        <el-form-item required label="课程音频" prop="courseAudio">
+          <el-radio-group v-model="postInfo.courseAudio">
             <el-radio
               v-for="item in isEnabledOptions"
               :key="Number(item.value)"
@@ -105,20 +109,11 @@ const update = async () => {
             >
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number
-            style="width: 100%"
-            controls-position="right"
-            v-model="postInfo.sort"
-            placeholder="排序"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="备注" prop="description">
+        <el-form-item required label="课程简介" prop="courseDescription">
           <el-input
             type="textarea"
-            v-model="postInfo.description"
-            placeholder="备注"
+            v-model="postInfo.courseDescription"
+            placeholder="课程简介"
             clearable
           />
         </el-form-item>

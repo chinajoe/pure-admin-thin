@@ -34,6 +34,7 @@ const pageData = reactive<{
     id: "",
     courseName: "",
     courseCover: "",
+    fkCourseAudioId: "",
     publishStatus: 0,
     courseDescription: "",
     sort: 999,
@@ -69,6 +70,7 @@ const initPostInfo = (data: Course) => {
       id: "",
       courseName: "",
       courseCover: "",
+      fkCourseAudioId: "",
       publishStatus: 0,
       courseDescription: "",
       sort: 999,
@@ -245,8 +247,8 @@ const publishStatusStyleRender = (publishStatus: number) => {
           </template>
         </el-table-column>
         <el-table-column
-          prop="createTime"
-          label="创建时间"
+          prop="updateTime"
+          label="更新时间"
           sortable
           resizable
           :show-overflow-tooltip="true"
