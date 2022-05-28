@@ -57,7 +57,8 @@
     "vue-types": "^4.1.1",
     "font-awesome": "^4.7.0",
     "e-icon-picker": "^2.0.9",
-    "lowdb": "^3.0.0"
+    "lowdb": "^3.0.0",
+    "sass": "^1.49.9"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",
