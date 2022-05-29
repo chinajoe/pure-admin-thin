@@ -10,6 +10,13 @@ export interface Course extends BaseClass {
   courseName: string;
   // 课程封面
   courseCover: string;
+  courseCoverName: string;
+  // 课程封面url
+  courseCoverUrl: string;
+  // 课程音频
+  courseAudioName: string;
+  // 课程音频url
+  courseAudioUrl: string;
   // 课程音频
   fkCourseAudioId: string;
   // 课程描述

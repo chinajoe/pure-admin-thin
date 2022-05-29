@@ -2,20 +2,25 @@
 export default { name: "PostEdit" };
 </script>
 <script setup lang="ts">
-import { toRef, PropType, reactive, ref, Ref } from "vue";
+import { toRef, PropType, reactive, ref } from "vue";
+import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { Course } from "/@/api/model/course/course_list_model";
-import { ElForm } from "element-plus";
+import { ElForm, ElUpload } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { courseApi } from "/@/api/course/course_list";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+
 const postForm = ref<InstanceType<typeof ElForm>>();
+const uploadRef = ref<InstanceType<typeof ElUpload>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
 const postRules = reactive({
   courseName: [{ required: true, message: "请输入课程名称", trigger: "blur" }],
   courseCover: [{ required: true, message: "请上传课程封面", trigger: "blur" }],
-  courseAudio: [{ required: true, message: "请上传课程音频", trigger: "blur" }],
+  fkCourseAudioId: [
+    { required: true, message: "请上传课程音频", trigger: "blur" }
+  ],
   courseDescription: [
     { required: true, message: "请输入课程简介", trigger: "blur" }
   ]
@@ -43,12 +48,25 @@ const position = toRef(props, "position");
 const dialogVisible = toRef(props, "dialogVisible");
 const postInfo = toRef(props, "postInfo");
 const isUpdate = toRef(props, "isUpdate");
-const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
-  props,
-  "isEnabledOptions"
-);
+const courseCoverFileList = (postInfo: Course) => {
+  return [
+    {
+      name: postInfo.courseCoverName,
+      url: postInfo.courseCoverUrl
+    }
+  ];
+};
+const courseAudioFileList = (postInfo: Course) => {
+  return [
+    {
+      name: postInfo.courseAudioName,
+      url: postInfo.courseAudioUrl
+    }
+  ];
+};
 const handleDialogClose = () => {
   postForm.value!.clearValidate();
+  uploadRef.value.clearFiles();
   emit("refresh");
 };
 const handlerSave = () => {
@@ -74,6 +92,18 @@ const update = async () => {
   successMessage("保存成功");
   handleDialogClose();
 };
+const handlerCourseAudioUpload = async val => {
+  const fileData: File[] = [val.file];
+  const uuids = await courseApi.uploadFile(fileData);
+  postInfo.value.fkCourseAudioId = uuids.toString();
+  successMessage("上传成功");
+};
+const handlerCourseCoverUpload = async val => {
+  const fileData: File[] = [val.file];
+  const uuids = await courseApi.uploadFile(fileData);
+  postInfo.value.courseCover = uuids.toString();
+  successMessage("上传成功");
+};
 </script>
 
 <template>
@@ -97,17 +127,45 @@ const update = async () => {
           <el-input v-model="postInfo.courseName" clearable />
         </el-form-item>
         <el-form-item required label="课程封面" prop="courseCover">
-          <el-input v-model="postInfo.courseCover" clearable />
-        </el-form-item>
-        <el-form-item required label="课程音频" prop="courseAudio">
-          <el-radio-group v-model="postInfo.courseAudio">
-            <el-radio
-              v-for="item in isEnabledOptions"
-              :key="Number(item.value)"
-              :label="Number(item.value)"
-              >{{ item.label }}</el-radio
+          <el-upload
+            ref="uploadRef"
+            class="upload-demo"
+            :multiple="false"
+            :file-list="courseCoverFileList(postInfo)"
+            :show-file-list="true"
+            list-type="picture"
+            accept="image/*"
+            :limit="1"
+            action=""
+            :http-request="handlerCourseCoverUpload"
+          >
+            <el-button
+              type="info"
+              size="default"
+              :icon="useRenderIcon('iconify-fa-upload')"
+              >上传封面</el-button
             >
-          </el-radio-group>
+          </el-upload>
+        </el-form-item>
+        <el-form-item required label="课程音频" prop="fkCourseAudioId">
+          <el-upload
+            ref="uploadRef"
+            class="upload-demo"
+            :multiple="false"
+            :file-list="courseAudioFileList(postInfo)"
+            :show-file-list="true"
+            accept="audio/*"
+            :limit="1"
+            action=""
+            :http-request="handlerCourseAudioUpload"
+          >
+            <el-button
+              type="info"
+              size="default"
+              :icon="useRenderIcon('iconify-fa-upload')"
+              >上传音频</el-button
+            >
+          </el-upload>
         </el-form-item>
         <el-form-item required label="课程简介" prop="courseDescription">
           <el-input

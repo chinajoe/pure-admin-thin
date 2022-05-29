@@ -62,14 +62,14 @@ onMounted(() => {
           v-model="pageData.searchInfo.number"
           placeholder="岗位编码"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-input
           v-model="pageData.searchInfo.name"
           placeholder="岗位名称"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-select
@@ -82,7 +82,7 @@ onMounted(() => {
             :key="Number(item.value)"
             :label="item.label"
             :value="Number(item.value)"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -100,7 +100,7 @@ onMounted(() => {
       :search-model="pageData.searchInfo"
       :is-enabled-options="pageData.isEnabledOptions"
       @handler-refresh="handlerRefresh"
-    ></post-list>
+    />
   </div>
 </template>
 

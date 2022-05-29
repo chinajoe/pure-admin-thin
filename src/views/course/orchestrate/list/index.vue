@@ -34,6 +34,10 @@ const pageData = reactive<{
     id: "",
     courseName: "",
     courseCover: "",
+    courseCoverName: "",
+    courseCoverUrl: "",
+    courseAudioName: "",
+    courseAudioUrl: "",
     fkCourseAudioId: "",
     publishStatus: 0,
     courseDescription: "",
@@ -70,6 +74,10 @@ const initPostInfo = (data: Course) => {
       id: "",
       courseName: "",
       courseCover: "",
+      courseCoverName: "",
+      courseCoverUrl: "",
+      courseAudioName: "",
+      courseAudioUrl: "",
       fkCourseAudioId: "",
       publishStatus: 0,
       courseDescription: "",
@@ -214,14 +222,22 @@ const publishStatusStyleRender = (publishStatus: number) => {
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column
-          prop="courseCover"
-          label="课程封面"
-          sortable
-          resizable
-          :show-overflow-tooltip="true"
-          align="center"
-        />
+        <!--        <el-table-column-->
+        <!--          prop="courseCover"-->
+        <!--          label="课程封面"-->
+        <!--          sortable-->
+        <!--          resizable-->
+        <!--          :show-overflow-tooltip="true"-->
+        <!--          align="center"-->
+        <!--        >-->
+        <!--          <template #default="scope">-->
+        <!--            <el-image-->
+        <!--              style="width: 80px; height: 80px"-->
+        <!--              :src="scope.row.courseCover"-->
+        <!--              fit="cover"-->
+        <!--            />-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
         <el-table-column
           prop="courseDescription"
           label="课程描述"

@@ -203,7 +203,7 @@ const handlerUpload = async val => {
             circle
             :icon="useRenderIcon('iconify-fa-refresh')"
             @click="handlerRefresh"
-          ></el-button>
+          />
         </div>
       </div>
       <el-table
@@ -221,7 +221,7 @@ const handlerUpload = async val => {
           :show-overflow-tooltip="true"
           align="center"
           type="selection"
-        ></el-table-column>
+        />
         <el-table-column
           prop="number"
           label="岗位编码"
@@ -229,7 +229,7 @@ const handlerUpload = async val => {
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="name"
           label="岗位名称"
@@ -237,7 +237,7 @@ const handlerUpload = async val => {
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="isEnabled"
           label="岗位状态"
@@ -261,7 +261,7 @@ const handlerUpload = async val => {
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="createTime"
           label="创建时间"
@@ -269,7 +269,7 @@ const handlerUpload = async val => {
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           label="操作"
           sortable
@@ -285,7 +285,7 @@ const handlerUpload = async val => {
               @click="handlerEdit(scope.row)"
               v-auth="permission.edit"
               size="small"
-            ></el-button>
+            />
             <el-button
               title="删除"
               type="danger"
@@ -293,7 +293,7 @@ const handlerUpload = async val => {
               @click="handlerDelete(scope.row)"
               v-auth="permission.delete"
               size="small"
-            ></el-button>
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -305,7 +305,7 @@ const handlerUpload = async val => {
         :total="searchModel.total"
         @size-change="sizeChange"
         @current-change="currentChange"
-      ></el-pagination>
+      />
     </el-row>
 
     <post-edit
@@ -314,7 +314,7 @@ const handlerUpload = async val => {
       :is-update="pageData.isUpdate"
       :is-enabled-options="isEnabledOptions"
       @refresh="handlerRefresh"
-    ></post-edit>
+    />
   </div>
 </template>
 
