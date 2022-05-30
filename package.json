@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "cross-env --max_old_space_size=4096 vite",
     "serve": "pnpm dev",
-    "prebuild": "test \"$CI\" = true && npx pnpm install -r --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "build": "rimraf dist && cross-env vite build",
     "build:test": "rimraf dist && cross-env vite build --mode test",
     "report": "rimraf dist && cross-env vite build",
