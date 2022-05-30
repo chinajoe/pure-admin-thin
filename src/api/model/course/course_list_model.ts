@@ -1,4 +1,5 @@
 import { BaseClass, BaseQuery } from "../domain";
+import { UploadFileInfo } from "/@/api/model/upload_file_info";
 
 export interface CourseQuery extends BaseQuery {
   publishStatus?: number;
@@ -9,16 +10,9 @@ export interface Course extends BaseClass {
   // 课程名称
   courseName: string;
   // 课程封面
-  courseCover: string;
-  courseCoverName: string;
-  // 课程封面url
-  courseCoverUrl: string;
+  courseCover: UploadFileInfo;
   // 课程音频
-  courseAudioName: string;
-  // 课程音频url
-  courseAudioUrl: string;
-  // 课程音频
-  fkCourseAudioId: string;
+  courseAudio: UploadFileInfo;
   // 课程描述
   courseDescription: string;
   // 发布状态: 未发布，已发布

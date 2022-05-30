@@ -33,12 +33,16 @@ const pageData = reactive<{
   postInfo: {
     id: "",
     courseName: "",
-    courseCover: "",
-    courseCoverName: "",
-    courseCoverUrl: "",
-    courseAudioName: "",
-    courseAudioUrl: "",
-    fkCourseAudioId: "",
+    courseCover: {
+      id: "",
+      name: "",
+      url: ""
+    },
+    courseAudio: {
+      id: "",
+      name: "",
+      url: ""
+    },
     publishStatus: 0,
     courseDescription: "",
     sort: 999,
@@ -73,12 +77,16 @@ const initPostInfo = (data: Course) => {
     pageData.postInfo = {
       id: "",
       courseName: "",
-      courseCover: "",
-      courseCoverName: "",
-      courseCoverUrl: "",
-      courseAudioName: "",
-      courseAudioUrl: "",
-      fkCourseAudioId: "",
+      courseCover: {
+        id: "",
+        name: "",
+        url: ""
+      },
+      courseAudio: {
+        id: "",
+        name: "",
+        url: ""
+      },
       publishStatus: 0,
       courseDescription: "",
       sort: 999,

@@ -18,9 +18,7 @@ const emit = defineEmits<{
 const postRules = reactive({
   courseName: [{ required: true, message: "请输入课程名称", trigger: "blur" }],
   courseCover: [{ required: true, message: "请上传课程封面", trigger: "blur" }],
-  fkCourseAudioId: [
-    { required: true, message: "请上传课程音频", trigger: "blur" }
-  ],
+  courseAudio: [{ required: true, message: "请上传课程音频", trigger: "blur" }],
   courseDescription: [
     { required: true, message: "请输入课程简介", trigger: "blur" }
   ]
@@ -49,20 +47,16 @@ const dialogVisible = toRef(props, "dialogVisible");
 const postInfo = toRef(props, "postInfo");
 const isUpdate = toRef(props, "isUpdate");
 const courseCoverFileList = (postInfo: Course) => {
-  return [
-    {
-      name: postInfo.courseCoverName,
-      url: postInfo.courseCoverUrl
-    }
-  ];
+  if (postInfo.courseCover && postInfo.courseCover.id) {
+    return [postInfo.courseCover];
+  }
+  return [];
 };
 const courseAudioFileList = (postInfo: Course) => {
-  return [
-    {
-      name: postInfo.courseAudioName,
-      url: postInfo.courseAudioUrl
-    }
-  ];
+  if (postInfo.courseAudio && postInfo.courseAudio.id) {
+    return [postInfo.courseAudio];
+  }
+  return [];
 };
 const handleDialogClose = () => {
   postForm.value!.clearValidate();
@@ -95,13 +89,21 @@ const update = async () => {
 const handlerCourseAudioUpload = async val => {
   const fileData: File[] = [val.file];
   const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.fkCourseAudioId = uuids.toString();
+  postInfo.value.courseAudio = {
+    id: uuids.toString(),
+    name: val.file.name,
+    url: ""
+  };
   successMessage("上传成功");
 };
 const handlerCourseCoverUpload = async val => {
   const fileData: File[] = [val.file];
   const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.courseCover = uuids.toString();
+  postInfo.value.courseCover = {
+    id: uuids.toString(),
+    name: val.file.name,
+    url: ""
+  };
   successMessage("上传成功");
 };
 </script>
@@ -133,7 +135,7 @@ const handlerCourseCoverUpload = async val => {
             :multiple="false"
             :file-list="courseCoverFileList(postInfo)"
             :show-file-list="true"
-            list-type="picture"
+            :list-type="isUpdate === true ? 'picture' : 'text'"
             accept="image/*"
             :limit="1"
             action=""
@@ -147,7 +149,7 @@ const handlerCourseCoverUpload = async val => {
             >
           </el-upload>
         </el-form-item>
-        <el-form-item required label="课程音频" prop="fkCourseAudioId">
+        <el-form-item required label="课程音频" prop="courseAudio">
           <el-upload
             ref="uploadRef"
             class="upload-demo"
