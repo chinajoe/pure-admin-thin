@@ -37,7 +37,7 @@ const state = reactive({
   // editor 配置项
   setting: {
     language: "zh_CN",
-    language_url: "../../../../../public/tinymce/langs/zh_CN.js",
+    language_url: "/@/assets/tinymce/langs/zh_CN.js",
     width: "100%",
     height: document.body.clientHeight - 230,
     menubar: false,
