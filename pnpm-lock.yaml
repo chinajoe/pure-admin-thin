@@ -94,7 +94,7 @@ specifiers:
 
 dependencies:
   "@ctrl/tinycolor": 3.4.1
-  "@pureadmin/components": 1.0.6_vue@3.2.36
+  "@pureadmin/components": 1.0.8_vue@3.2.36
   "@vueuse/core": 8.5.0_vue@3.2.36
   "@vueuse/motion": 2.0.0-beta.12_vue@3.2.36
   "@vueuse/shared": 8.5.0_vue@3.2.36
@@ -1184,10 +1184,10 @@ packages:
       }
     dev: false
 
-  /@pureadmin/components/1.0.6_vue@3.2.36:
+  /@pureadmin/components/1.0.8_vue@3.2.36:
     resolution:
       {
-        integrity: sha512-k+ZF/vsnLAZDkTGpBqZ44s9LTPZsCDFRnfNNXlGy7+TXInarzopuVWeQHGsPbHB3LPHcNd2/4MBjOq4NKYglpw==
+        integrity: sha512-cU+eor4PpAviuVlwjWl5MtCGwidGA6JA/rPzbB1EIZ13UV7iFyIpqjXcOF1Ge3sjRxmrG2VwCxICt6x+ZRw/2w==
       }
     peerDependencies:
       vue: ^3.2.0
@@ -2343,7 +2343,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001344
-      electron-to-chromium: 1.4.141
+      electron-to-chromium: 1.4.142
       escalade: 3.1.1
       node-releases: 2.0.5
       picocolors: 1.0.0
@@ -3390,10 +3390,10 @@ packages:
       }
     dev: true
 
-  /electron-to-chromium/1.4.141:
+  /electron-to-chromium/1.4.142:
     resolution:
       {
-        integrity: sha512-mfBcbqc0qc6RlxrsIgLG2wCqkiPAjEezHxGTu7p3dHHFOurH4EjS9rFZndX5axC8264rI1Pcbw8uQP39oZckeA==
+        integrity: sha512-ea8Q1YX0JRp4GylOmX4gFHIizi0j9GfRW4EkaHnkZp0agRCBB4ZGeCv17IEzIvBkiYVwfoKVhKZJbTfqCRdQdg==
       }
     dev: true
 
@@ -5923,7 +5923,10 @@ packages:
     dev: false
 
   /mitt/1.1.2:
-    resolution: { integrity: sha1-OA5hSA1qYVtmDwertg1R4KTkvtY= }
+    resolution:
+      {
+        integrity: sha512-3btxP0O9iGADGWAkteQ8mzDtEspZqu4I32y4GZYCV5BrwtzdcRpF4dQgNdJadCrbBx7Lu6Sq9AVrerMHR0Hkmw==
+      }
     dev: false
 
   /mitt/3.0.0:
@@ -5962,7 +5965,10 @@ packages:
     dev: true
 
   /ms/2.0.0:
-    resolution: { integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g= }
+    resolution:
+      {
+        integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==
+      }
 
   /ms/2.1.2:
     resolution:
@@ -6023,7 +6029,10 @@ packages:
     dev: false
 
   /natural-compare/1.4.0:
-    resolution: { integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc= }
+    resolution:
+      {
+        integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
+      }
     dev: true
 
   /no-case/3.0.4:
