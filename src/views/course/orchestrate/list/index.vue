@@ -38,7 +38,17 @@ const pageData = reactive<{
       name: "",
       url: ""
     },
+    newCourseCover: {
+      id: "",
+      name: "",
+      url: ""
+    },
     courseAudio: {
+      id: "",
+      name: "",
+      url: ""
+    },
+    newCourseAudio: {
       id: "",
       name: "",
       url: ""
@@ -82,7 +92,17 @@ const initPostInfo = (data: Course) => {
         name: "",
         url: ""
       },
+      newCourseCover: {
+        id: "",
+        name: "",
+        url: ""
+      },
       courseAudio: {
+        id: "",
+        name: "",
+        url: ""
+      },
+      newCourseAudio: {
         id: "",
         name: "",
         url: ""

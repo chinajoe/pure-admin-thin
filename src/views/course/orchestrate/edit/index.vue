@@ -63,6 +63,14 @@ const handleDialogClose = () => {
   uploadRef.value.clearFiles();
   emit("refresh");
 };
+const handleUploadFile = () => {
+  if (postInfo.value.newCourseAudio && postInfo.value.newCourseAudio.id) {
+    postInfo.value.courseAudio = postInfo.value.newCourseAudio;
+  }
+  if (postInfo.value.newCourseCover && postInfo.value.newCourseCover.id) {
+    postInfo.value.courseCover = postInfo.value.newCourseCover;
+  }
+};
 const handlerSave = () => {
   postForm.value!.validate(isValid => {
     if (isValid) {
@@ -77,11 +85,13 @@ const handlerSave = () => {
   });
 };
 const save = async () => {
+  handleUploadFile();
   await courseApi.save(postInfo.value);
   successMessage("保存成功");
   handleDialogClose();
 };
 const update = async () => {
+  handleUploadFile();
   await courseApi.updateById(postInfo.value.id, postInfo.value);
   successMessage("保存成功");
   handleDialogClose();
@@ -89,7 +99,7 @@ const update = async () => {
 const handlerCourseAudioUpload = async val => {
   const fileData: File[] = [val.file];
   const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.courseAudio = {
+  postInfo.value.newCourseAudio = {
     id: uuids.toString(),
     name: val.file.name,
     url: ""
@@ -99,7 +109,7 @@ const handlerCourseAudioUpload = async val => {
 const handlerCourseCoverUpload = async val => {
   const fileData: File[] = [val.file];
   const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.courseCover = {
+  postInfo.value.newCourseCover = {
     id: uuids.toString(),
     name: val.file.name,
     url: ""
@@ -135,7 +145,7 @@ const handlerCourseCoverUpload = async val => {
             :multiple="false"
             :file-list="courseCoverFileList(postInfo)"
             :show-file-list="true"
-            :list-type="isUpdate === true ? 'picture' : 'text'"
+            list-type="picture"
             accept="image/*"
             :limit="1"
             action=""
