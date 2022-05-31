@@ -6,11 +6,13 @@ import { toRef, PropType, reactive, Ref, ref } from "vue";
 import { Course, CourseQuery } from "/@/api/model/course/course_list_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import PostEdit from "../edit/index.vue";
+import ContentEdit from "../content/index.vue";
 import { ElTable } from "element-plus";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { courseApi } from "/@/api/course/course_list";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { CourseContent } from "/@/api/model/course/course_content_model";
 
 const postListRef = ref<InstanceType<typeof ElTable>>();
 const permission = reactive({
@@ -23,11 +25,14 @@ const emit = defineEmits<{
 }>();
 const pageData = reactive<{
   dialogTableVisible: boolean;
+  contentDialogTableVisible: boolean;
   selection: Course[];
   postInfo: Course;
+  contentInfo: CourseContent;
   isUpdate: boolean;
 }>({
   dialogTableVisible: false,
+  contentDialogTableVisible: false,
   selection: [],
   isUpdate: false,
   postInfo: {
@@ -57,6 +62,12 @@ const pageData = reactive<{
     courseDescription: "",
     sort: 999,
     publishTime: ""
+  },
+  contentInfo: {
+    id: "",
+    fkCourseId: "",
+    content: "",
+    publishType: 0
   }
 });
 const props = defineProps({
@@ -114,6 +125,25 @@ const initPostInfo = (data: Course) => {
     };
   }
 };
+const initCourseContent = (data: Course) => {
+  if (data) {
+    data.id;
+    // pageData.contentInfo = await courseApi.get();
+    pageData.contentInfo = {
+      id: "1",
+      fkCourseId: "6295b3aeca41653e10eff0a5",
+      content: "Hello World.",
+      publishType: 0
+    };
+  } else {
+    pageData.contentInfo = {
+      id: "",
+      fkCourseId: "",
+      content: "",
+      publishType: 0
+    };
+  }
+};
 const handlerUpdate = () => {
   if (pageData.selection.length <= 0) {
     warnMessage("请选择");
@@ -127,6 +157,10 @@ const handlerEdit = (data: Course) => {
   initPostInfo(data);
   pageData.isUpdate = true;
   pageData.dialogTableVisible = true;
+};
+const handlerContentEdit = (data: Course) => {
+  initCourseContent(data);
+  pageData.contentDialogTableVisible = true;
 };
 const handlerDelete = (data: Course) => {
   confirm("是否删除当前数据")
@@ -153,6 +187,10 @@ const handlerDeleteBatch = () => {
 };
 const handlerRefresh = () => {
   pageData.dialogTableVisible = false;
+  emit("handlerRefresh");
+};
+const handlerContentRefresh = () => {
+  pageData.contentDialogTableVisible = false;
   emit("handlerRefresh");
 };
 const handlerAddNew = () => {
@@ -307,9 +345,17 @@ const publishStatusStyleRender = (publishStatus: number) => {
         >
           <template #default="scope">
             <el-button
+              title="课程内容编辑"
+              type="success"
+              :icon="useRenderIcon('iconify-fa-edit')"
+              @click="handlerContentEdit(scope.row)"
+              v-auth="permission.edit"
+              size="small"
+            />
+            <el-button
               title="修改"
               type="primary"
-              :icon="useRenderIcon('iconify-fa-edit')"
+              :icon="useRenderIcon('iconify-ep-setting')"
               @click="handlerEdit(scope.row)"
               v-auth="permission.edit"
               size="small"
@@ -342,6 +388,12 @@ const publishStatusStyleRender = (publishStatus: number) => {
       :is-update="pageData.isUpdate"
       :is-enabled-options="isEnabledOptions"
       @refresh="handlerRefresh"
+    />
+
+    <content-edit
+      :content-info="pageData.contentInfo"
+      :dialog-visible="pageData.contentDialogTableVisible"
+      @refresh="handlerContentRefresh"
     />
   </div>
 </template>
