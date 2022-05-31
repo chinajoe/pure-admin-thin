@@ -4,20 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "cross-env --max_old_space_size=4096 vite",
-    "serve": "yarn dev",
+    "serve": "pnpm dev",
+    "prebuild": "test \"$CI\" = true && npx pnpm install -r --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "build": "rimraf dist && cross-env vite build",
     "build:test": "rimraf dist && cross-env vite build --mode test",
     "report": "rimraf dist && cross-env vite build",
     "preview": "vite preview",
-    "preview:build": "yarn build && vite preview",
-    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && yarn install",
+    "preview:build": "pnpm build && vite preview",
+    "clean:cache": "rm -rf node_modules && rm -rf .eslintcache && pnpm install",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock}/**/*.{vue,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,css,scss,postcss,less}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "lint:pretty": "pretty-quick --staged",
-    "lint": "yarn lint:eslint && yarn lint:prettier && yarn lint:stylelint",
-    "prepare": "husky install"
+    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
+    "prepare": "husky install",
+    "preinstall": "npx only-allow pnpm"
   },
   "browserslist": [
     "> 1%",
