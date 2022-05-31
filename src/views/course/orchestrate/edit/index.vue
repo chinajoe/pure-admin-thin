@@ -60,10 +60,10 @@ const courseAudioFileList = (postInfo: Course) => {
 };
 const handleDialogClose = () => {
   postForm.value!.clearValidate();
-  uploadRef.value.clearFiles();
   emit("refresh");
 };
 const handleUploadFile = () => {
+  uploadRef.value.clearFiles();
   if (postInfo.value.newCourseAudio && postInfo.value.newCourseAudio.id) {
     postInfo.value.courseAudio = postInfo.value.newCourseAudio;
   }
