@@ -11,6 +11,7 @@ import { ElTable } from "element-plus";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { courseApi } from "/@/api/course/course_list";
+import { courseContentApi } from "/@/api/course/course_content";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { CourseContent } from "/@/api/model/course/course_content_model";
 
@@ -66,7 +67,9 @@ const pageData = reactive<{
   contentInfo: {
     id: "",
     fkCourseId: "",
+    courseName: "",
     content: "",
+    htmlContent: "",
     publishType: 0
   }
 });
@@ -125,21 +128,35 @@ const initPostInfo = (data: Course) => {
     };
   }
 };
-const initCourseContent = (data: Course) => {
-  if (data) {
-    data.id;
-    // pageData.contentInfo = await courseApi.get();
-    pageData.contentInfo = {
-      id: "1",
-      fkCourseId: "6295b3aeca41653e10eff0a5",
-      content: "Hello World.",
-      publishType: 0
-    };
+const getContentInfo = async (data: Course) => {
+  const result = await courseContentApi.detail<CourseContent>({
+    fkCourseId: data.id
+  });
+  if (result) {
+    pageData.contentInfo = result;
+    pageData.contentInfo.fkCourseId = data.id;
+    pageData.contentInfo.courseName = data.courseName;
   } else {
     pageData.contentInfo = {
       id: "",
-      fkCourseId: "",
+      fkCourseId: data.id,
+      courseName: data.courseName,
       content: "",
+      htmlContent: "",
+      publishType: 0
+    };
+  }
+};
+const initCourseContent = (data: Course) => {
+  if (data) {
+    getContentInfo(data);
+  } else {
+    pageData.contentInfo = {
+      id: "",
+      fkCourseId: data.id,
+      courseName: data.courseName,
+      content: "",
+      htmlContent: "",
       publishType: 0
     };
   }
