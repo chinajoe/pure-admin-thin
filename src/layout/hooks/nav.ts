@@ -3,18 +3,19 @@ import { router } from "/@/router";
 import { getConfig } from "/@/config";
 import { emitter } from "/@/utils/mitt";
 import { routeMetaType } from "../types";
+import { remainingPaths } from "/@/router";
 import { transformI18n } from "/@/plugins/i18n";
 import { useAppStoreHook } from "/@/store/modules/app";
-import { remainingPaths } from "/@/router/modules/index";
 import { useEpThemeStoreHook } from "/@/store/modules/epTheme";
 import { tokenStoreHook } from "../../store/modules/token";
+
+const errorInfo = "当前路由配置不正确，请检查配置";
 
 export function useNav() {
   const pureApp = useAppStoreHook();
   const tokenStore = tokenStoreHook();
   // 用户名
-  const usename: string = tokenStore.getCurrentUserInfo()?.nickName;
-
+  const username: string = tokenStore.getCurrentUserInfo()?.nickName;
   // 设置国际化选中后的样式
   const getDropdownItemStyle = computed(() => {
     return (locale, t) => {
@@ -25,6 +26,10 @@ export function useNav() {
     };
   });
 
+  const avatarsStyle = computed(() => {
+    return username ? { marginRight: "10px" } : "";
+  });
+
   const isCollapse = computed(() => {
     return !pureApp.getSidebarStatus;
   });
@@ -32,17 +37,15 @@ export function useNav() {
   // 动态title
   function changeTitle(meta: routeMetaType) {
     const Title = getConfig().Title;
-    if (Title)
-      document.title = `${transformI18n(meta.title, meta.i18n)} | ${Title}`;
-    else document.title = transformI18n(meta.title, meta.i18n);
+    if (Title) document.title = `${transformI18n(meta.title)} | ${Title}`;
+    else document.title = transformI18n(meta.title);
   }
 
   // 退出登录
-  async function logout() {
-    // storageSession.removeItem("info");
-    // router.push("/login");
-    await tokenStoreHook().logout();
-    router.push("/login");
+  function logout() {
+    tokenStoreHook()
+      .logout()
+      .then(() => router.push("/login"));
   }
 
   function backHome() {
@@ -62,6 +65,7 @@ export function useNav() {
   }
 
   function resolvePath(route) {
+    if (!route.children) return console.error(errorInfo);
     const httpReg = /^http(s?):\/\//;
     const routeChildPath = route.children[0]?.path;
     if (httpReg.test(routeChildPath)) {
@@ -80,6 +84,7 @@ export function useNav() {
     }
     // 找到当前路由的信息
     function findCurrentRoute(indexPath: string, routes) {
+      if (!routes) return console.error(errorInfo);
       return routes.map(item => {
         if (item.path === indexPath) {
           if (item.redirect) {
@@ -115,7 +120,8 @@ export function useNav() {
     resolvePath,
     isCollapse,
     pureApp,
-    usename,
+    username,
+    avatarsStyle,
     getDropdownItemStyle
   };
 }

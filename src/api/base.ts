@@ -80,7 +80,7 @@ export default abstract class BaseRequest {
    * @returns response result
    */
   public get<T>(url: string, params?: any): Promise<T> {
-    return this.request<T, any>("get", url, { params: params });
+    return this.requestNonLoading<T, any>("get", url, { params: params });
   }
   /**
    * post request
@@ -89,7 +89,7 @@ export default abstract class BaseRequest {
    * @returns response result
    */
   public post<T>(url: string, data?: any): Promise<T> {
-    return this.request<T, any>("post", url, { data: data });
+    return this.requestNonLoading<T, any>("post", url, { data: data });
   }
   /**
    * put request
@@ -98,7 +98,7 @@ export default abstract class BaseRequest {
    * @returns response result
    */
   public put<T>(url: string, data: any): Promise<T> {
-    return this.request<T, any>("put", url, { data: data });
+    return this.requestNonLoading<T, any>("put", url, { data: data });
   }
   /**
    * delete request
@@ -107,7 +107,7 @@ export default abstract class BaseRequest {
    * @returns response result
    */
   public delete<T>(url: string, params?: any): Promise<T> {
-    return this.request<T, any>("delete", url, params);
+    return this.requestNonLoading<T, any>("delete", url, params);
   }
   /**
    * http request
@@ -127,6 +127,17 @@ export default abstract class BaseRequest {
       .finally(() => {
         hideLoading();
       });
+  }
+  /**
+   * http request 无遮挡
+   * @returns
+   */
+  public requestNonLoading<T, P>(
+    method: RequestMethods,
+    url: string,
+    params?: P
+  ): Promise<T> {
+    return http.request<T>(method, this.getBaseUrl().trim() + url, params);
   }
   /**
    * file download

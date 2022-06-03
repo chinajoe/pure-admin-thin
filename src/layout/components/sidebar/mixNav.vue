@@ -35,7 +35,8 @@ const {
   menuSelect,
   resolvePath,
   pureApp,
-  usename,
+  username,
+  avatarsStyle,
   getDropdownItemStyle
 } = useNav();
 
@@ -132,10 +133,13 @@ const updateCache = async () => {
         :index="resolvePath(route) || route.redirect"
       >
         <template #title>
-          <div v-show="route.meta.icon" :class="['el-icon', route.meta.icon]">
+          <!-- <div v-show="route.meta.icon" :class="['el-icon', route.meta.icon]">
             <component :is="useRenderIcon(route.meta && route.meta.icon)" />
-          </div>
-          <span>{{ transformI18n(route.meta.title, route.meta.i18n) }}</span>
+          </div> -->
+          <el-icon v-show="route.meta.icon">
+            <component :is="useRenderIcon(route.meta && route.meta.icon)" />
+          </el-icon>
+          <span>{{ transformI18n(route.meta.title) }}</span>
           <FontIcon
             v-if="route.meta.extraIcon"
             width="30px"
@@ -179,20 +183,20 @@ const updateCache = async () => {
       <!-- 退出登陆 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          <img :src="avatars" />
-          <p>{{ usename }}</p>
+          <img v-if="avatars" :src="avatars" :style="avatarsStyle" />
+          <p v-if="username">{{ username }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="currentSetting">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('el-icon-setting')" />
+                <component :is="useRenderIcon('ep:setting')" />
               </el-icon>
               用户设置
             </el-dropdown-item>
             <el-dropdown-item @click="updateCache">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('fa fa-trash')" />
+                <component :is="useRenderIcon('iconify-fa-trash')" />
               </el-icon>
               清理缓存
             </el-dropdown-item>

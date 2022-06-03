@@ -28,7 +28,11 @@ export const dictStore = defineStore({
       if (result.length <= 0) {
         return [];
       }
-      return result.filter(v => v.type === type)[0].entry;
+      const filter = result.filter(v => v.type === type);
+      if (filter.length <= 0) {
+        return [];
+      }
+      return filter[0].entry;
     }
   }
 });

@@ -3,18 +3,11 @@ import { Icon as IconifyIcon, addIcon } from "@iconify/vue/dist/offline";
 
 // element-plus icon
 import Check from "@iconify-icons/ep/check";
-import Menu from "@iconify-icons/ep/menu";
 import HomeFilled from "@iconify-icons/ep/home-filled";
-import SetUp from "@iconify-icons/ep/set-up";
-import Edit from "@iconify-icons/ep/edit";
 import Setting from "@iconify-icons/ep/setting";
 import Lollipop from "@iconify-icons/ep/lollipop";
-import Link from "@iconify-icons/ep/link";
-import Position from "@iconify-icons/ep/position";
-import Histogram from "@iconify-icons/ep/histogram";
 import RefreshRight from "@iconify-icons/ep/refresh-right";
 import ArrowDown from "@iconify-icons/ep/arrow-down";
-import Close from "@iconify-icons/ep/close";
 import CloseBold from "@iconify-icons/ep/close-bold";
 import Bell from "@iconify-icons/ep/bell";
 import Guide from "@iconify-icons/ep/guide";
@@ -31,19 +24,17 @@ import Rank from "@iconify-icons/ep/rank";
 import videoPlay from "@iconify-icons/ep/video-play";
 import Monitor from "@iconify-icons/ep/monitor";
 import Search from "@iconify-icons/ep/search";
+import Lock from "@iconify-icons/ep/lock";
+import Edit from "@iconify-icons/ep/edit";
+import Download from "@iconify-icons/ep/download";
+import Upload from "@iconify-icons/ep/upload";
+
 addIcon("check", Check);
-addIcon("menu", Menu);
 addIcon("home-filled", HomeFilled);
-addIcon("set-up", SetUp);
-addIcon("edit", Edit);
 addIcon("setting", Setting);
 addIcon("lollipop", Lollipop);
-addIcon("link", Link);
-addIcon("position", Position);
-addIcon("histogram", Histogram);
 addIcon("refresh-right", RefreshRight);
 addIcon("arrow-down", ArrowDown);
-addIcon("close", Close);
 addIcon("close-bold", CloseBold);
 addIcon("bell", Bell);
 addIcon("guide", Guide);
@@ -60,6 +51,10 @@ addIcon("video-play", videoPlay);
 addIcon("rank", Rank);
 addIcon("monitor", Monitor);
 addIcon("search", Search);
+addIcon("lock", Lock);
+addIcon("edit", Edit);
+addIcon("download", Download);
+addIcon("upload", Upload);
 
 // remixicon
 import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";
@@ -74,6 +69,7 @@ import closeCircleLine from "@iconify-icons/ri/close-circle-line";
 import arrowUpLine from "@iconify-icons/ri/arrow-up-line";
 import arrowDownLine from "@iconify-icons/ri/arrow-down-line";
 import bookmark2Line from "@iconify-icons/ri/bookmark-2-line";
+import refreshLine from "@iconify-icons/ri/refresh-line";
 addIcon("arrow-right-s-line", arrowRightSLine);
 addIcon("arrow-left-s-line", arrowLeftSLine);
 addIcon("logout-circle-r-line", logoutCircleRLine);
@@ -86,6 +82,7 @@ addIcon("close-circle-line", closeCircleLine);
 addIcon("arrow-up-line", arrowUpLine);
 addIcon("arrow-down-line", arrowDownLine);
 addIcon("bookmark-2-line", bookmark2Line);
+addIcon("refreshLine", refreshLine);
 
 // Font Awesome 4
 import faUser from "@iconify-icons/fa/user";
@@ -101,6 +98,7 @@ import faCheck from "@iconify-icons/fa/check";
 import faEdit from "@iconify-icons/fa/edit";
 import epDocument from "@iconify-icons/ep/document";
 import epSetting from "@iconify-icons/ep/setting";
+import faPlayCircle from "@iconify-icons/fa/play-circle";
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
@@ -114,6 +112,8 @@ addIcon("fa-check", faCheck);
 addIcon("fa-edit", faEdit);
 addIcon("ep-document", epDocument);
 addIcon("ep-setting", epSetting);
+addIcon("fa-search", Search);
+addIcon("fa-play-circle", faPlayCircle);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({

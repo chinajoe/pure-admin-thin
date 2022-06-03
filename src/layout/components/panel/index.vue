@@ -23,7 +23,7 @@ emitter.on("openPanel", () => {
         <div class="project-configuration">
           <h3>项目配置</h3>
           <el-icon title="关闭配置" class="el-icon-close" @click="show = !show">
-            <IconifyIconOffline icon="close" />
+            <IconifyIconOffline icon="close-bold" />
           </el-icon>
         </div>
         <div style="border-bottom: 1px solid #dcdfe6" />
@@ -54,7 +54,7 @@ emitter.on("openPanel", () => {
 
 .right-panel {
   width: 100%;
-  max-width: 300px;
+  max-width: 315px;
   height: 100vh;
   position: fixed;
   top: 0;
@@ -105,8 +105,8 @@ emitter.on("openPanel", () => {
 
 .right-panel-items {
   margin-top: 60px;
-  height: 100vh;
-  overflow: auto;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
 .project-configuration {
@@ -120,7 +120,7 @@ emitter.on("openPanel", () => {
   margin-left: 10px;
 
   i {
-    font-size: 20px;
+    font-size: 16px;
     margin-right: 20px;
 
     &:hover {

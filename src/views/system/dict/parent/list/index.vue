@@ -2,7 +2,7 @@
 export default { name: "DictParent" };
 </script>
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, toRef } from "vue";
 import { dictApi } from "/@/api/system/dict";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictParentEdit from "../edit/index.vue";
@@ -16,7 +16,16 @@ const permission = reactive({
   delete: ["dict:update"]
 });
 const emit = defineEmits<{ (e: "rowClick", v: string, data: Dict) }>();
+const props = defineProps({
+  dataSource: {
+    require: true,
+    type: [],
+    default: []
+  }
+});
+const dataSource = toRef(props, "dataSource");
 const pageData = reactive<{
+  loading: boolean;
   selection: any[];
   dictDataList: Dict[];
   isUpdate: boolean;
@@ -24,6 +33,7 @@ const pageData = reactive<{
   searchInfo: DictQuery;
   dictInfo: Dict;
 }>({
+  loading: false,
   selection: [],
   dictDataList: [],
   isUpdate: false,
@@ -59,10 +69,17 @@ const handlerSearch = () => {
   pageData.searchInfo.pageNum = 1;
   getPage();
 };
-const getPage = async () => {
-  const result: Page<Dict[]> = await dictApi.page(pageData.searchInfo);
-  pageData.dictDataList = result.records;
-  pageData.searchInfo.total = Number(result.total);
+const getPage = () => {
+  pageData.loading = true;
+  dictApi
+    .page(pageData.searchInfo)
+    .then((res: Page<Dict[]> | string) => {
+      if (res !== "fail") {
+        pageData.dictDataList = (res as Page<Dict[]>).records;
+        pageData.searchInfo.total = Number((res as Page<Dict[]>).total);
+      }
+    })
+    .finally(() => (pageData.loading = false));
 };
 const handleSelectionChange = val => {
   pageData.selection = val;
@@ -71,7 +88,13 @@ const initDept = (data: Dict) => {
   if (data) {
     pageData.dictInfo = data;
   } else {
-    pageData.dictInfo = { id: "", name: "", type: "", description: "" };
+    pageData.dictInfo = {
+      id: "",
+      name: "",
+      type: "",
+      description: "",
+      isEnabled: 0
+    };
   }
 };
 const handlerAddNew = () => {
@@ -160,19 +183,18 @@ onMounted(() => {
               v-model="pageData.searchInfo.name"
               placeholder="名称"
               clearable
-            ></el-input>
+            />
           </el-form-item>
           <el-form-item>
             <el-input
               v-model="pageData.searchInfo.type"
               placeholder="类型"
               clearable
-            ></el-input>
+            />
           </el-form-item>
           <el-form-item>
             <el-button
               plain
-              size="large"
               :icon="useRenderIcon('iconify-fa-search')"
               @click="handlerSearch"
               >查询</el-button
@@ -207,10 +229,7 @@ onMounted(() => {
               @click="handlerBatchDelete"
               >删除</el-button
             >
-            <button
-              class="el-button el-button--default"
-              style="padding: 0 0 0 0px"
-            >
+            <button class="el-button" style="padding: 0 0 0 0px">
               <el-upload
                 ref="uploadRef"
                 class="upload-demo"
@@ -242,15 +261,15 @@ onMounted(() => {
               circle
               :icon="useRenderIcon('iconify-fa-refresh')"
               @click="handlerRefresh"
-            ></el-button>
+            />
           </div>
         </div>
         <el-col :xs="10">
           <el-table
+            v-loading="pageData.loading"
             :data="pageData.dictDataList"
             style="width: 100%"
             ref="dictListRef"
-            size="large"
             border
             :fit="true"
             highlight-current-row
@@ -264,7 +283,7 @@ onMounted(() => {
               :show-overflow-tooltip="true"
               align="center"
               type="selection"
-            ></el-table-column>
+            />
             <el-table-column
               prop="name"
               label="名称"
@@ -272,7 +291,7 @@ onMounted(() => {
               resizable
               :show-overflow-tooltip="true"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               prop="type"
               label="类型"
@@ -280,7 +299,7 @@ onMounted(() => {
               resizable
               :show-overflow-tooltip="true"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               prop="description"
               label="备注"
@@ -288,7 +307,7 @@ onMounted(() => {
               resizable
               :show-overflow-tooltip="true"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               label="操作"
               sortable
@@ -304,7 +323,7 @@ onMounted(() => {
                   v-auth="permission.edit"
                   @click="handlerEdit(scope.row)"
                   size="small"
-                ></el-button>
+                />
                 <el-button
                   title="删除"
                   type="danger"
@@ -312,7 +331,7 @@ onMounted(() => {
                   v-auth="permission.delete"
                   @click="handlerDelete(scope.row)"
                   size="small"
-                ></el-button>
+                />
               </template>
             </el-table-column>
           </el-table>
@@ -324,7 +343,7 @@ onMounted(() => {
             :total="pageData.searchInfo.total"
             @size-change="sizeChange"
             @current-change="currentChange"
-          ></el-pagination>
+          />
         </el-col>
       </el-row>
     </el-card>
@@ -333,8 +352,9 @@ onMounted(() => {
     :dialog-visible="pageData.dictDialogVisible"
     :is-update="pageData.isUpdate"
     :dict-info="pageData.dictInfo"
+    :dataSource="dataSource"
     @refresh="handlerRefresh"
-  ></dict-parent-edit>
+  />
 </template>
 
 <style scoped></style>
