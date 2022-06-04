@@ -97,22 +97,26 @@ const update = async () => {
 };
 const handlerCourseAudioUpload = async val => {
   const fileData: File[] = [val.file];
-  const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.newCourseAudio = {
-    id: uuids.toString(),
-    name: val.file.name,
-    url: ""
-  };
+  const uploadResult = await courseApi.uploadFile(fileData);
+  if (uploadResult.length > 0) {
+    postInfo.value.newCourseAudio = {
+      id: uploadResult.toString(),
+      name: val.file.name,
+      url: ""
+    };
+  }
   successMessage("上传成功");
 };
 const handlerCourseCoverUpload = async val => {
   const fileData: File[] = [val.file];
-  const uuids = await courseApi.uploadFile(fileData);
-  postInfo.value.newCourseCover = {
-    id: uuids.toString(),
-    name: val.file.name,
-    url: ""
-  };
+  const uploadResult = await courseApi.uploadFile(fileData);
+  if (uploadResult.length > 0) {
+    postInfo.value.newCourseCover = {
+      id: uploadResult[0].id,
+      name: val.file.name,
+      url: ""
+    };
+  }
   successMessage("上传成功");
 };
 </script>

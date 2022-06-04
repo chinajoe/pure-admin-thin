@@ -1,4 +1,5 @@
 import BaseRequest from "../base";
+import { UploadFileInfo } from "/@/api/model/upload_file_info";
 
 enum API {
   BASE_URL = "/course/orchestrate",
@@ -12,8 +13,8 @@ class PostAPI extends BaseRequest {
     return API.BASE_URL;
   }
 
-  uploadFile(files: any[]): Promise<string> {
-    return this.uploadFileRequest<string>(API.upload, files);
+  uploadFile(files: any[]): Promise<Array<UploadFileInfo>> {
+    return this.uploadFileRequest<Array<UploadFileInfo>>(API.upload, files);
   }
 }
 
