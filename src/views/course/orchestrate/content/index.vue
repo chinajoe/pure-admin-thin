@@ -8,11 +8,11 @@ import type { ElDrawer } from "element-plus";
 import { CourseContent } from "/@/api/model/course/course_content_model";
 import { errorMessage, successMessage, warnMessage } from "/@/utils/message";
 import Vue3Tinymce from "@jsdawn/vue3-tinymce";
-import { loadEnv } from "@build/index";
+// import { loadEnv } from "@build/index";
 import { courseContentApi } from "/@/api/course/course_content";
 import { courseApi } from "/@/api/course/course_list";
 
-const { VITE_API_SERVER } = loadEnv();
+// const { VITE_API_SERVER } = loadEnv();
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
@@ -46,36 +46,35 @@ const state = reactive({
     language_url:
       "https://unpkg.com/@jsdawn/vue3-tinymce@1.1.6/dist/tinymce/langs/zh_CN.js",
     plugins:
-      " preview paste importcss searchreplace autolink directionality visualblocks visualchars fullscreen image imagetools link media template  table  hr pagebreak nonbreaking advlist lists wordcount  textpattern noneditable help  quickbars emoticons let",
-    imagetools_cors_hosts: ["10086hx.com:8848", "hxclouda.com"],
+      " preview paste importcss searchreplace autolink directionality visualblocks visualchars fullscreen image imagetools link media template  table  hr pagebreak nonbreaking advlist lists wordcount  textpattern noneditable help  quickbars emoticons",
+    imagetools_cors_hosts: ["10086hx.com", "hxclouda.com"],
     menubar: "file edit view insert format tools table help",
     toolbar:
-      "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor  | fontselect fontsizeselect formatselect |template insertfile image let media link | backcolor removeformat |  numlist bullist | outdent indent |  emoticons | fullscreen pagebreak preview",
+      "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor  | fontselect fontsizeselect formatselect |template insertfile image media link | backcolor removeformat |  numlist bullist | outdent indent |  emoticons | fullscreen pagebreak preview",
     fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
     font_formats:
       "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;",
     toolbar_sticky: true,
     image_advtab: true,
-    link_list: [
-      { title: "My page 1", value: "https://www.tiny.cloud" },
-      { title: "My page 2", value: "http://www.moxiecode.com" }
-    ],
+    link_list: [],
     image_list: [
       { title: "My page 1", value: "https://www.tiny.cloud" },
       { title: "My page 2", value: "http://www.moxiecode.com" }
     ],
-    image_class_list: [
-      { title: "None", value: "" },
-      { title: "Some class", value: "class-name" }
-    ],
+    image_class_list: [],
     importcss_append: true,
+    images_upload_handler: function (blobInfo, succFun, failFun) {
+      let file = blobInfo.blob();
+      const fileData: File[] = [file];
+      // 上传图片
+      courseApi.uploadFile(fileData);
+    },
     file_picker_callback: function (callback, value, meta) {
       let inputElem = document.createElement("input"); //创建文件选择
       inputElem.setAttribute("type", "file");
       inputElem.click();
       inputElem.onchange = async () => {
         let file = inputElem.files[0]; //获取文件信息
-        console.log(file.type.slice(0, 5));
         if (file.type.slice(0, 5) == "image" && file.size / 1024 / 1024 > 2) {
           errorMessage("上传失败，图片大小请控制在2M以内");
         } else if (
@@ -123,16 +122,7 @@ const state = reactive({
     toolbar_mode: "sliding",
     contextmenu: "link image imagetools table",
     content_style:
-      "body { font-family:Microsoft YaHei,PingFang SC,sans-serif; font-size:14px }",
-    // 自定义 图片上传模式
-    custom_images_upload: true,
-    custom_images_upload_header: {
-      authorization:
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleToiOiJkODk2YzNhNC04MTY4LTQ1Y2QtODg1MS04ZGJiMmYyYmNiNzkifQ.mpq3Td_S0OmtckZ4XzpkNPCKl5tkPVHZg_TTVo-4ig2wSV8g3qGpjfk7Q_ynZmkbYL5wAsRTUiR4ratT6V9gkQ"
-    },
-    images_upload_url: VITE_API_SERVER + "/course/orchestrate/upload",
-    custom_images_upload_callback: res => res.data[0].url,
-    custom_images_upload_param: { id: "xxxx01", age: 18 }
+      "body { font-family:PingFang SC; font-size:14px } img {max-width:100%;}"
   }
 });
 
