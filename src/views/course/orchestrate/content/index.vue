@@ -1,3 +1,51 @@
+<template>
+  <el-drawer
+    ref="drawerRef"
+    v-model="dialogVisible"
+    title="课程内容编辑"
+    :before-close="handleClose"
+    :z-index="1024"
+    direction="rtl"
+    custom-class="demo-drawer"
+    size="88%"
+  >
+    <div class="demo-drawer__content">
+      <el-form
+        ref="postForm"
+        :model="contentInfo"
+        :rules="postRules"
+        label-width="auto"
+        required-asterisk
+        center
+      >
+        <el-form-item label="课程名称" prop="id">
+          <el-input v-model="contentInfo.id" v-show="false" />
+          <el-input v-model="contentInfo.fkCourseId" v-show="false" />
+          <el-input v-model="contentInfo.courseName" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="发布设置" required prop="publishType">
+          <el-radio-group v-model="contentInfo.publishType">
+            <el-radio :key="0" :label="0"> 暂不发布 </el-radio>
+            <el-radio :key="1" :label="1"> 立即发布 </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="课程内容" required prop="htmlContent">
+          <vue3-tinymce
+            v-model="contentInfo.htmlContent"
+            :setting="state.setting"
+          />
+        </el-form-item>
+      </el-form>
+      <div class="demo-drawer__footer">
+        <el-button @click="handleClose">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="handlerSave">{{
+          loading ? "提交中" : "保存"
+        }}</el-button>
+      </div>
+    </div>
+  </el-drawer>
+</template>
+
 <script lang="ts">
 export default { name: "ContentEdit" };
 </script>
@@ -8,11 +56,12 @@ import type { ElDrawer } from "element-plus";
 import { CourseContent } from "/@/api/model/course/course_content_model";
 import { errorMessage, successMessage, warnMessage } from "/@/utils/message";
 import Vue3Tinymce from "@jsdawn/vue3-tinymce";
-// import { loadEnv } from "@build/index";
 import { courseContentApi } from "/@/api/course/course_content";
 import { courseApi } from "/@/api/course/course_list";
+import { courseFileApi } from "/@/api/course/file_info_list";
+import { CourseFileInfo } from "/@/api/model/course/course_file_model";
+import { Page } from "/@/api/model/domain";
 
-// const { VITE_API_SERVER } = loadEnv();
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
@@ -94,25 +143,7 @@ const state = reactive({
         }
       };
     },
-    templates: [
-      {
-        title: "New Table",
-        description: "creates a new table",
-        content:
-          '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
-      },
-      {
-        title: "Starting my story",
-        description: "A cure for writers block",
-        content: "Once upon a time..."
-      },
-      {
-        title: "New list with dates",
-        description: "New List with dates",
-        content:
-          '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>'
-      }
-    ],
+    templates: [],
     template_cdate_format: "[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]",
     template_mdate_format: "[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]",
     image_caption: true,
@@ -125,6 +156,23 @@ const state = reactive({
       "body { font-family:PingFang SC; font-size:14px } img {max-width:100%;}"
   }
 });
+
+const templates = async () => {
+  const result: Page<CourseFileInfo[]> = await courseFileApi.page({
+    latestDays: 10,
+    sortColumn: [],
+    groupColumn: [],
+    pageSize: 1000,
+    pageNum: 1,
+    total: 0
+  });
+  if (result.records && result.records.length > 0) {
+    state.setting.templates = result.records;
+  } else {
+    state.setting.templates = [];
+  }
+};
+templates();
 
 const save = async () => {
   await courseContentApi.save(contentInfo.value);
@@ -168,54 +216,5 @@ const doClose = () => {
   emit("refresh");
 };
 </script>
-
-<template>
-  <el-drawer
-    ref="drawerRef"
-    v-model="dialogVisible"
-    title="课程内容编辑"
-    :before-close="handleClose"
-    :z-index="1024"
-    direction="rtl"
-    custom-class="demo-drawer"
-    size="80%"
-  >
-    <div class="demo-drawer__content">
-      <el-form
-        ref="postForm"
-        :model="contentInfo"
-        :rules="postRules"
-        label-width="auto"
-        required-asterisk
-        center
-      >
-        <el-form-item label="课程名称" prop="id">
-          <el-input v-model="contentInfo.id" v-show="false" />
-          <el-input v-model="contentInfo.fkCourseId" v-show="false" />
-          <el-input v-model="contentInfo.courseName" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="发布设置" required prop="publishType">
-          <el-radio-group v-model="contentInfo.publishType">
-            <el-radio :key="0" :label="0"> 暂不发布 </el-radio>
-            <el-radio :key="1" :label="1"> 立即发布 </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="课程内容" required prop="htmlContent">
-          <vue3-tinymce
-            v-model="contentInfo.htmlContent"
-            :setting="state.setting"
-          />
-          <!--          <MiniMCE v-model="contentInfo.htmlContent" />-->
-        </el-form-item>
-      </el-form>
-      <div class="demo-drawer__footer">
-        <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="handlerSave">{{
-          loading ? "提交中" : "保存"
-        }}</el-button>
-      </div>
-    </div>
-  </el-drawer>
-</template>
 
 <style scoped></style>

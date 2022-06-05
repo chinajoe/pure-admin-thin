@@ -88,6 +88,7 @@ specifiers:
   vue-i18n: ^9.2.0-beta.35
   vue-router: ^4.0.15
   vue-types: ^4.1.1
+  vue3-audio-player: ^1.0.4
 
 dependencies:
   "@ctrl/tinycolor": 3.4.1
@@ -123,6 +124,7 @@ dependencies:
   vue-i18n: 9.2.0-beta.35_vue@3.2.33
   vue-router: 4.0.15_vue@3.2.33
   vue-types: 4.1.1_vue@3.2.33
+  vue3-audio-player: 1.0.4
 
 devDependencies:
   "@commitlint/cli": 13.1.0
@@ -237,6 +239,53 @@ packages:
         integrity: sha512-CQkeV+oJxUazwjlHD0/3ZD08QWKuGQkhnrKo3e6ly5pd48VUpXbb77q0xMU4+vc2CkJnDS02Eq/M9ugyX20XZA==
       }
     dev: true
+
+  /@any-touch/compute/2.2.0:
+    resolution:
+      {
+        integrity: sha512-hrw74b/cVT8SmiKFLValmllajw+bBvTa5iUwIXFVVIJM9T3tO15zZC2QbjVz8Uwi6XjH932RDUILGMs2TNvyQg==
+      }
+    dependencies:
+      "@any-touch/shared": 2.2.0
+      "@any-touch/vector": 2.2.0
+      tslib: 2.4.0
+    dev: false
+
+  /@any-touch/core/2.2.0:
+    resolution:
+      {
+        integrity: sha512-xMHAA5aLCatFto+4fQWyE4YAsyN/LsXS4mnYuVpqFYoNz8dl5FsB/TIyb9JrqMKLYMxxcZ9joqR8gDprH1lwBw==
+      }
+    dependencies:
+      "@any-touch/shared": 2.2.0
+      any-event: 2.2.0
+    dev: false
+
+  /@any-touch/pan/2.2.0:
+    resolution:
+      {
+        integrity: sha512-uMkCHbTm5qWji/FvhumP9n1ZCkPU7hy864g+ZhoWZ0OWAmn7s/TKRo4UqPBfqEPUMV6obGZvatrrgBLWT6J57w==
+      }
+    dependencies:
+      "@any-touch/compute": 2.2.0
+      "@any-touch/shared": 2.2.0
+    dev: false
+
+  /@any-touch/shared/2.2.0:
+    resolution:
+      {
+        integrity: sha512-2n1zWaATi/3osr/dkIUq5O7aSffKUsTM4DsIbPMW1VEO77v/rX2HkLoxt2Djzj5eCGh7An55Vw8NeA33kTTSRA==
+      }
+    dev: false
+
+  /@any-touch/vector/2.2.0:
+    resolution:
+      {
+        integrity: sha512-t7pGYegIDCJl+swwsohZHZKmF71ZMt+hjwVEyhaEP6nQhcx6S7zulxnRxNp1t8s+c/JdK02Q89HnzQ4Ukg4+IA==
+      }
+    dependencies:
+      "@any-touch/shared": 2.2.0
+    dev: false
 
   /@babel/code-frame/7.16.7:
     resolution:
@@ -2160,6 +2209,15 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       color-convert: 2.0.1
+
+  /any-event/2.2.0:
+    resolution:
+      {
+        integrity: sha512-PB4sEiVUjL+5mLmwlAGYdI5/1ouckapxS6+RPIvrGXv9XTMav7M3k3rR/f9fwAR+e2608CTR3FOR5HrOEYTtKA==
+      }
+    dependencies:
+      tslib: 2.4.0
+    dev: false
 
   /anymatch/3.1.2:
     resolution:
@@ -7506,6 +7564,17 @@ packages:
       "@vue/runtime-dom": 3.2.33
       "@vue/server-renderer": 3.2.33_vue@3.2.33
       "@vue/shared": 3.2.33
+
+  /vue3-audio-player/1.0.4:
+    resolution:
+      {
+        integrity: sha512-qD8UPdb74IhuYCzB1Dz2mV9RfOoV6ic5Itq2ucR3rdT/BNljmtLLXAnpxRPCgc/D45na1nDbDLNBkfqgTEeRdQ==
+      }
+    dependencies:
+      "@any-touch/core": 2.2.0
+      "@any-touch/pan": 2.2.0
+      vue: 3.2.33
+    dev: false
 
   /web-streams-polyfill/3.2.1:
     resolution:
